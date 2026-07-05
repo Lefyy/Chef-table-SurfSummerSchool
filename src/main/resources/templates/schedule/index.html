@@ -29,7 +29,7 @@
       <div class="flex items-start justify-between gap-4">
         <div>
           <a class="text-xl font-semibold underline-offset-4 hover:underline" th:href="@{/slots/{id}(id=${slot.id})}" th:text="${slot.program.title}">Итальянская паста</a>
-          <p class="mt-1 text-sm text-stone-500" th:text="${#temporals.format(slot.startsAt, 'dd.MM HH:mm')} + ' • ' + ${slot.chef.name}">Дата • Шеф</p>
+          <p class="mt-1 text-sm text-stone-500" th:text="${#temporals.format(slot.startsAt, 'dd.MM HH:mm') + ' • ' + slot.chef.name + (slot.chef.avgRating != null ? ' • ★ ' + slot.chef.avgRating : ' • Рейтинг пока нет')}">Дата • Шеф</p>
         </div>
         <span class="rounded-full bg-green-50 px-3 py-1 text-sm font-medium text-green-800" th:text="${slot.capacity - slot.bookedSeats} + ' мест'">8 мест</span>
       </div>
