@@ -18,7 +18,10 @@ class BookingOptionsService(
     fun options(slotId: UUID, client: AuthenticatedClient): BookingOptions {
         val slot = slots.findWithDetailsById(slotId) ?: throw NotFoundException("Slot not found")
         validateBookable(slot)
-        return BookingOptions(rentals.findByActiveTrueAndStockGreaterThanOrderByNameAsc(), allergens.findAllByOrderByNameAsc(), bookingLinks.findAllergenIdsByClientId(client.id).toSet())
+        val savedAllergenIds = bookingLinks.findAllergenIdsByClientId(client.id).toSet()
+        val allergenEntities = allergens.findAllByOrderByNameAsc()
+        val allergenOptions = allergenEntities.map { AllergenOption(requireNotNull(it.id), it.name, savedAllergenIds.contains(it.id)) }
+        return BookingOptions(rentals.findByActiveTrueAndStockGreaterThanOrderByNameAsc(), allergenEntities, savedAllergenIds, allergenOptions)
     }
 }
 
@@ -58,7 +61,8 @@ fun validateBookable(slot: SlotEntity) {
     if (slot.startsAt.isBefore(OffsetDateTime.now())) throw ValidationException("Slot has already started")
 }
 
-data class BookingOptions(val rentalItems: List<RentalItemEntity>, val allergens: List<AllergenEntity>, val savedAllergenIds: Set<UUID>)
+data class BookingOptions(val rentalItems: List<RentalItemEntity>, val allergens: List<AllergenEntity>, val savedAllergenIds: Set<UUID>, val allergenOptions: List<AllergenOption>)
+data class AllergenOption(val id: UUID, val name: String, val selected: Boolean)
 data class CreateBookingCommand(val slotId: UUID, val selectedRentalItemIds: List<UUID>, val selectedAllergenIds: List<UUID>)
 class NotFoundException(message: String) : RuntimeException(message)
 class ValidationException(message: String) : RuntimeException(message)

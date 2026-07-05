@@ -18,8 +18,8 @@
     <section class="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-stone-200" x-show="step === 2">
       <h2 class="text-xl font-semibold">2. Аллергии</h2>
       <p class="mt-1 text-sm text-stone-500">Выбранные аллергии сохранятся в профиле.</p>
-      <label class="mt-3 inline-flex w-full gap-3 rounded-2xl border border-stone-200 p-3" th:each="allergen : ${options.allergens}">
-        <input class="mt-1" type="checkbox" name="allergenIds" th:value="${allergen.id}" th:checked="${options.savedAllergenIds.contains(allergen.id)}">
+      <label class="mt-3 inline-flex w-full gap-3 rounded-2xl border border-stone-200 p-3" th:each="allergen : ${options.allergenOptions}">
+        <input class="mt-1" type="checkbox" name="allergenIds" th:value="${allergen.id}" th:checked="${allergen.selected}">
         <span th:text="${allergen.name}">Орехи</span>
       </label>
       <div class="mt-4 grid grid-cols-2 gap-3"><button class="rounded-2xl border border-stone-300 px-4 py-3 font-semibold" type="button" @click="step = 1">Назад</button><button class="rounded-2xl bg-stone-950 px-4 py-3 font-semibold text-white" type="button" @click="step = 3">Далее</button></div>

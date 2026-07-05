@@ -8,8 +8,8 @@
   <p class="mt-2 text-stone-500">Выберите аллергии — они автоматически будут отмечены при следующем бронировании.</p>
   <div th:if="${message}" class="mt-4 rounded-2xl bg-green-50 p-3 text-green-800" th:text="${message}"></div>
   <form class="mt-6 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-stone-200" method="post" action="/profile/allergies">
-    <label class="mt-3 flex gap-3 rounded-2xl border border-stone-200 p-3" th:each="allergen : ${settings.allergens}">
-      <input class="mt-1" type="checkbox" name="allergenIds" th:value="${allergen.id}" th:checked="${settings.savedAllergenIds.contains(allergen.id)}">
+    <label class="mt-3 flex gap-3 rounded-2xl border border-stone-200 p-3" th:each="allergen : ${settings.allergenOptions}">
+      <input class="mt-1" type="checkbox" name="allergenIds" th:value="${allergen.id}" th:checked="${allergen.selected}">
       <span th:text="${allergen.name}">Орехи</span>
     </label>
     <button class="mt-5 w-full rounded-2xl bg-stone-950 px-4 py-3 font-semibold text-white" type="submit">Сохранить</button>
