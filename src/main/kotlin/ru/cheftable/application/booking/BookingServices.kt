@@ -1,5 +1,6 @@
 package ru.cheftable.application.booking
 
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ru.cheftable.application.auth.AuthenticatedClient
@@ -34,6 +35,8 @@ class BookingCreationService(
     private val allergens: AllergenJpaRepository,
     private val bookingLinks: BookingLinkRepository,
 ) {
+    private val log = LoggerFactory.getLogger(javaClass)
+
     @Transactional
     fun create(client: AuthenticatedClient, command: CreateBookingCommand): BookingEntity {
         val slot = slots.findLockedWithDetailsById(command.slotId) ?: throw NotFoundException("Slot not found")
@@ -51,6 +54,7 @@ class BookingCreationService(
             bookingLinks.addBookingAllergen(requireNotNull(booking.id), it)
             bookingLinks.addClientAllergen(client.id, it)
         }
+        log.info("booking_created event_type=booking_created booking_id={} client_id={} slot_id={}", booking.id, client.id, slot.id)
         return bookings.findWithDetailsById(requireNotNull(booking.id)) ?: booking
     }
 }

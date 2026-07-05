@@ -1,6 +1,10 @@
 spring:
   flyway:
     locations: classpath:db/migration
+chef-table:
+  auth:
+    secure-cookie: true
 logging:
   level:
-    org.hibernate.orm.jdbc.bind: OFF
+    org.hibernate.SQL: info
+    org.hibernate.orm.jdbc.bind: off

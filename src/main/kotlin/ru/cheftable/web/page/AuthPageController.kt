@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse
 import jakarta.validation.Valid
 import jakarta.validation.constraints.Pattern
 import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
@@ -17,7 +18,7 @@ import ru.cheftable.application.auth.AuthenticatedClient
 import ru.cheftable.application.auth.UnauthorizedException
 
 @Controller
-class AuthPageController(private val authService: AuthService) {
+class AuthPageController(private val authService: AuthService, @Value("\${chef-table.auth.secure-cookie:false}") private val secureCookie: Boolean) {
     @GetMapping("/")
     fun home(@AuthenticationPrincipal client: AuthenticatedClient?) = if (client == null) "redirect:/login" else "redirect:/schedule"
 
@@ -75,7 +76,7 @@ class AuthPageController(private val authService: AuthService) {
 
     private fun authCookie(value: String, maxAge: Int): Cookie = Cookie(AUTH_COOKIE_NAME, value).apply {
         isHttpOnly = true
-        secure = false
+        secure = secureCookie
         path = "/"
         this.maxAge = maxAge
         setAttribute("SameSite", "Lax")

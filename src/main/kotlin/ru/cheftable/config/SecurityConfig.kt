@@ -2,12 +2,16 @@ package ru.cheftable.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.boot.web.servlet.FilterRegistrationBean
+import org.springframework.core.Ordered
+import ru.cheftable.infrastructure.logging.CorrelationIdFilter
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.http.HttpStatus
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import ru.cheftable.infrastructure.security.BearerTokenAuthenticationFilter
 
@@ -18,7 +22,7 @@ class SecurityConfig {
 
     @Bean
     fun securityFilterChain(http: HttpSecurity, bearerFilter: BearerTokenAuthenticationFilter): SecurityFilterChain = http
-        .csrf { it.disable() }
+        .csrf { csrf -> csrf.ignoringRequestMatchers("/api/**").csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) }
         .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
         .authorizeHttpRequests {
             it.requestMatchers("/", "/css/**", "/js/**", "/actuator/health", "/login", "/login/code", "/api/v1/auth/sms/request", "/api/v1/auth/sms/verify").permitAll()
@@ -36,4 +40,10 @@ class SecurityConfig {
         }
         .logout { it.disable() }
         .build()
+
+    @Bean
+    fun correlationIdFilterRegistration(filter: CorrelationIdFilter): FilterRegistrationBean<CorrelationIdFilter> =
+        FilterRegistrationBean(filter).apply {
+            order = Ordered.HIGHEST_PRECEDENCE
+        }
 }

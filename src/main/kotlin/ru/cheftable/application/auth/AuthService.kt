@@ -1,6 +1,8 @@
 package ru.cheftable.application.auth
 
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
+import ru.cheftable.infrastructure.logging.maskPhone
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -18,10 +20,13 @@ class AuthService(
     private val passwordEncoder: PasswordEncoder,
     @Value("\${chef-table.auth.dev-code:1234}") private val devCode: String,
 ) {
+    private val log = LoggerFactory.getLogger(javaClass)
+
     @Transactional
     fun requestSms(phone: String): SmsRequestResult {
         val now = OffsetDateTime.now()
         smsChallenges.save(SmsChallengeEntity(UUID.randomUUID(), normalize(phone), passwordEncoder.encode(devCode), now.plusMinutes(5), null, now))
+        log.info("sms_requested event_type=sms_requested phone_mask={}", maskPhone(phone))
         return SmsRequestResult(300, 60, 3, 5)
     }
 
@@ -37,6 +42,7 @@ class AuthService(
         val client = clients.findByPhone(normalizedPhone) ?: clients.save(ClientEntity(UUID.randomUUID(), normalizedPhone, OffsetDateTime.now()))
         val token = Base64.getUrlEncoder().withoutPadding().encodeToString(UUID.randomUUID().toString().toByteArray())
         sessions.save(AuthSessionEntity(UUID.randomUUID(), client, hash(token), OffsetDateTime.now().plusDays(30), null, OffsetDateTime.now()))
+        log.info("auth_success event_type=auth_success client_id={} phone_mask={}", client.id, maskPhone(client.phone))
         return AuthResult(token, client.id!!, client.phone)
     }
 

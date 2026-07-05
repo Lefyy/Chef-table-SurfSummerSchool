@@ -18,3 +18,9 @@ management:
     web:
       exposure:
         include: health,info
+chef-table:
+  auth:
+    secure-cookie: false
+logging:
+  level:
+    org.hibernate.orm.jdbc.bind: off

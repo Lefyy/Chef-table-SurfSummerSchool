@@ -15,7 +15,7 @@
 
     <div th:if="${param.logout}" class="mt-4 rounded-2xl bg-green-50 p-3 text-sm text-green-800">Вы вышли из аккаунта.</div>
 
-    <form class="mt-6 space-y-4" th:action="@{/login}" th:object="${form}" method="post">
+    <form class="mt-6 space-y-4" th:action="@{/login}" th:object="${form}" method="post"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
       <input type="hidden" th:field="*{redirect}">
       <label class="block">
         <span class="text-sm font-medium">Телефон</span>

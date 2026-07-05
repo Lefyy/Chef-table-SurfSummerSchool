@@ -7,7 +7,7 @@
   <h1 class="mt-4 text-3xl font-bold">Мои аллергии</h1>
   <p class="mt-2 text-stone-500">Выберите аллергии — они автоматически будут отмечены при следующем бронировании.</p>
   <div th:if="${message}" class="mt-4 rounded-2xl bg-green-50 p-3 text-green-800" th:text="${message}"></div>
-  <form class="mt-6 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-stone-200" method="post" action="/profile/allergies">
+  <form class="mt-6 rounded-3xl bg-white p-5 shadow-sm ring-1 ring-stone-200" method="post" action="/profile/allergies"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
     <label class="mt-3 flex gap-3 rounded-2xl border border-stone-200 p-3" th:each="allergen : ${settings.allergenOptions}">
       <input class="mt-1" type="checkbox" name="allergenIds" th:value="${allergen.id}" th:checked="${allergen.selected}">
       <span th:text="${allergen.name}">Орехи</span>
