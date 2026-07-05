@@ -3,6 +3,8 @@ package ru.cheftable.persistence
 import org.springframework.data.jpa.repository.EntityGraph
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Lock
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
 import jakarta.persistence.LockModeType
 import java.time.OffsetDateTime
 import java.util.UUID
@@ -19,7 +21,8 @@ interface SlotJpaRepository : JpaRepository<SlotEntity, UUID> {
 }
 interface BookingJpaRepository : JpaRepository<BookingEntity, UUID> {
     @EntityGraph(attributePaths = ["slot", "slot.program", "slot.chef"])
-    fun findByClientIdOrderByCreatedAtDesc(clientId: UUID): List<BookingEntity>
+    @Query("select b from BookingEntity b where b.client.id = :clientId order by b.createdAt desc")
+    fun findByClientIdOrderByCreatedAtDesc(@Param("clientId") clientId: UUID): List<BookingEntity>
     @EntityGraph(attributePaths = ["client", "slot", "slot.program", "slot.chef"])
     fun findWithDetailsById(id: UUID): BookingEntity?
 }
