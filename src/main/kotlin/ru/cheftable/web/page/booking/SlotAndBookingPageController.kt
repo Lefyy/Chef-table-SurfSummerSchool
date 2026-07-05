@@ -8,6 +8,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import ru.cheftable.application.auth.AuthenticatedClient
 import ru.cheftable.application.booking.*
 import ru.cheftable.persistence.SlotJpaRepository
+import ru.cheftable.application.booking.NoSeatsException
+import ru.cheftable.application.booking.StudioCancelledException
+import ru.cheftable.application.booking.ValidationException
+import ru.cheftable.application.booking.NotFoundException
 import java.util.UUID
 
 @Controller
@@ -32,9 +36,23 @@ class SlotAndBookingPageController(
 
     @PostMapping("/slots/{slotId}/booking")
     fun create(@PathVariable slotId: UUID, @AuthenticationPrincipal client: AuthenticatedClient, @ModelAttribute form: BookingForm, redirect: RedirectAttributes): String {
-        val booking = bookingCreation.create(client, CreateBookingCommand(slotId, form.rentalItemIds, form.allergenIds))
-        redirect.addFlashAttribute("bookingId", booking.id)
-        return "redirect:/booking/success"
+        return try {
+            val booking = bookingCreation.create(client, CreateBookingCommand(slotId, form.rentalItemIds, form.allergenIds))
+            redirect.addFlashAttribute("bookingId", booking.id)
+            "redirect:/booking/success"
+        } catch (ex: NoSeatsException) {
+            redirect.addFlashAttribute("error", "Мест уже нет. Пожалуйста, выберите другой класс.")
+            "redirect:/schedule"
+        } catch (ex: StudioCancelledException) {
+            redirect.addFlashAttribute("error", "Класс отменён студией. Повторная запись недоступна.")
+            "redirect:/schedule"
+        } catch (ex: NotFoundException) {
+            redirect.addFlashAttribute("error", "Класс не найден.")
+            "redirect:/schedule"
+        } catch (ex: ValidationException) {
+            redirect.addFlashAttribute("error", ex.message ?: "Не удалось создать бронь.")
+            "redirect:/slots/$slotId/booking"
+        }
     }
 
     @GetMapping("/booking/success")

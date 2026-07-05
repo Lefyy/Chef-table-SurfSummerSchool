@@ -25,7 +25,7 @@ class SecurityConfig {
         .csrf { csrf -> csrf.ignoringRequestMatchers("/api/**").csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) }
         .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
         .authorizeHttpRequests {
-            it.requestMatchers("/", "/css/**", "/js/**", "/actuator/health", "/login", "/login/code", "/api/v1/auth/sms/request", "/api/v1/auth/sms/verify").permitAll()
+            it.requestMatchers("/", "/css/**", "/js/**", "/actuator/health", "/error", "/login", "/login/code", "/api/v1/auth/sms/request", "/api/v1/auth/sms/verify").permitAll()
                 .anyRequest().authenticated()
         }
         .addFilterBefore(bearerFilter, UsernamePasswordAuthenticationFilter::class.java)
