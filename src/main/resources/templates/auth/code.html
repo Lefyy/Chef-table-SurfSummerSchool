@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Код из SMS — Шеф-стол</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="min-h-screen bg-stone-50 text-stone-950">
+<main class="mx-auto flex min-h-screen max-w-md flex-col justify-center p-6">
+  <section class="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-stone-200" x-data="{ seconds: Number($el.dataset.seconds) }" th:attr="data-seconds=${resendAvailableInSeconds ?: 60}" x-init="setInterval(() => { if (seconds > 0) seconds-- }, 1000)">
+    <p class="text-sm font-medium text-orange-700">Шеф-стол</p>
+    <h1 class="mt-2 text-3xl font-bold">Введите код</h1>
+    <p class="mt-3 text-stone-600">Код отправлен на <span class="font-semibold" th:text="${phone}">+79991234567</span>. В dev-режиме используйте код 1234.</p>
+
+    <form class="mt-6 space-y-4" th:action="@{/login/code}" th:object="${form}" method="post">
+      <input type="hidden" th:field="*{phone}">
+      <label class="block">
+        <span class="text-sm font-medium">SMS-код</span>
+        <input class="mt-2 w-full rounded-2xl border border-stone-300 px-4 py-3 text-center text-2xl tracking-[0.5em]" th:field="*{code}" placeholder="1234" autocomplete="one-time-code" inputmode="numeric" maxlength="4">
+        <span class="mt-2 block text-sm text-red-600" th:if="${#fields.hasErrors('code')}" th:errors="*{code}"></span>
+      </label>
+      <button class="w-full rounded-2xl bg-stone-950 px-4 py-3 font-semibold text-white" type="submit">Войти</button>
+    </form>
+
+    <p class="mt-4 text-sm text-stone-500">Повторная отправка будет доступна через <span x-text="seconds"></span> сек.</p>
+    <a class="mt-4 inline-block text-sm font-medium text-stone-700 underline" th:href="@{/login}">Изменить номер</a>
+  </section>
+</main>
+</body>
+</html>

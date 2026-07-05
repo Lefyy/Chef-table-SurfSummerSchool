@@ -21,3 +21,10 @@ interface BookingJpaRepository : JpaRepository<BookingEntity, UUID> {
 interface RentalItemJpaRepository : JpaRepository<RentalItemEntity, UUID> { fun findByActiveTrueAndStockGreaterThanOrderByNameAsc(stock: Int = 0): List<RentalItemEntity> }
 interface AllergenJpaRepository : JpaRepository<AllergenEntity, UUID> { fun findAllByOrderByNameAsc(): List<AllergenEntity> }
 interface RatingJpaRepository : JpaRepository<RatingEntity, UUID> { fun findByBookingId(bookingId: UUID): RatingEntity? }
+
+interface SmsChallengeJpaRepository : JpaRepository<SmsChallengeEntity, UUID> {
+    fun findFirstByPhoneAndConsumedAtIsNullOrderByCreatedAtDesc(phone: String): SmsChallengeEntity?
+}
+interface AuthSessionJpaRepository : JpaRepository<AuthSessionEntity, UUID> {
+    fun findByTokenHashAndRevokedAtIsNull(tokenHash: String): AuthSessionEntity?
+}
