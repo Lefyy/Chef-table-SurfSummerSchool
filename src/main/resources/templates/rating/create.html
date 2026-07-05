@@ -1,1 +1,80 @@
-<!doctype html><html lang="ru" xmlns:th="http://www.thymeleaf.org"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Оценить шефа</title><script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script><link rel="stylesheet" th:href="@{/css/app.css}"></head><body class="bg-stone-50"><main class="mx-auto max-w-3xl p-6" x-data="{stars:5}"><a th:href="@{/profile/bookings/{id}(id=${details.booking.id})}" class="underline">← Бронь</a><p class="mt-4 rounded-2xl bg-red-50 p-3 text-red-800" th:if="${error}" th:text="${error}"></p><h1 class="mt-4 text-3xl font-bold">Оцените шефа</h1><p class="mt-2 text-stone-600" th:text="${details.booking.slot.chef.name + (details.booking.slot.chef.avgRating != null ? ' • ★ ' + details.booking.slot.chef.avgRating : ' • Рейтинг пока нет')}">Шеф</p><form class="mt-6 rounded-3xl bg-white p-5 shadow" method="post" th:action="@{/ratings/{id}(id=${details.booking.id})}"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"><input type="hidden" name="stars" :value="stars"><div class="flex gap-2"><button type="button" th:each="i : ${#numbers.sequence(1,5)}" @click="stars = [[${i}]]" class="text-4xl" x-text="stars >= [[${i}]] ? '★' : '☆'"></button></div><label class="mt-4 block"><span class="font-semibold">Комментарий (необязательно)</span><textarea name="comment" rows="4" class="mt-2 w-full rounded-2xl border p-3"></textarea></label><button class="mt-4 w-full rounded-2xl bg-orange-700 px-4 py-3 font-semibold text-white">Отправить оценку</button></form></main></body></html>
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Оценить шефа</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}">
+  <style>
+    .rating-stars {
+      display: inline-flex;
+      flex-direction: row-reverse;
+      gap: 0.5rem;
+    }
+
+    .rating-stars input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .rating-stars label {
+      cursor: pointer;
+      color: #d6d3d1;
+      font-size: 2.5rem;
+      line-height: 1;
+      transition: color 120ms ease-in-out, transform 120ms ease-in-out;
+    }
+
+    .rating-stars label:hover,
+    .rating-stars label:hover ~ label,
+    .rating-stars input:checked ~ label {
+      color: #c2410c;
+    }
+
+    .rating-stars label:hover {
+      transform: translateY(-1px);
+    }
+
+    .rating-stars input:focus-visible + label {
+      outline: 2px solid #c2410c;
+      outline-offset: 4px;
+      border-radius: 0.375rem;
+    }
+  </style>
+</head>
+<body class="bg-stone-50">
+<main class="mx-auto max-w-3xl p-6">
+  <a th:href="@{/profile/bookings/{id}(id=${details.booking.id})}" class="underline">← Бронь</a>
+  <p class="mt-4 rounded-2xl bg-red-50 p-3 text-red-800" th:if="${error}" th:text="${error}"></p>
+  <h1 class="mt-4 text-3xl font-bold">Оцените шефа</h1>
+  <p class="mt-2 text-stone-600" th:text="${details.booking.slot.chef.name + (details.booking.slot.chef.avgRating != null ? ' • ★ ' + details.booking.slot.chef.avgRating : ' • Рейтинг пока нет')}">Шеф</p>
+
+  <form class="mt-6 rounded-3xl bg-white p-5 shadow" method="post" th:action="@{/ratings/{id}(id=${details.booking.id})}">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+    <fieldset>
+      <legend class="font-semibold">Количество звезд</legend>
+      <div class="rating-stars mt-2" aria-label="Выберите оценку от 1 до 5 звезд">
+        <input type="radio" id="stars-5" name="stars" value="5" checked>
+        <label for="stars-5" aria-label="5 звезд">★</label>
+        <input type="radio" id="stars-4" name="stars" value="4">
+        <label for="stars-4" aria-label="4 звезды">★</label>
+        <input type="radio" id="stars-3" name="stars" value="3">
+        <label for="stars-3" aria-label="3 звезды">★</label>
+        <input type="radio" id="stars-2" name="stars" value="2">
+        <label for="stars-2" aria-label="2 звезды">★</label>
+        <input type="radio" id="stars-1" name="stars" value="1">
+        <label for="stars-1" aria-label="1 звезда">★</label>
+      </div>
+    </fieldset>
+
+    <label class="mt-4 block">
+      <span class="font-semibold">Комментарий (необязательно)</span>
+      <textarea name="comment" rows="4" class="mt-2 w-full rounded-2xl border p-3"></textarea>
+    </label>
+    <button class="mt-4 w-full rounded-2xl bg-orange-700 px-4 py-3 font-semibold text-white">Отправить оценку</button>
+  </form>
+</main>
+</body>
+</html>
