@@ -8,11 +8,15 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import ru.cheftable.persistence.SlotJpaRepository
 import java.time.OffsetDateTime
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import ru.cheftable.application.auth.AuthenticatedClient
+import ru.cheftable.persistence.AllergenEntity
+import ru.cheftable.persistence.RentalItemEntity
 import java.util.UUID
 
 @RestController
 @RequestMapping("/api/v1/schedule")
-class ScheduleApiController(private val slots: SlotJpaRepository) {
+class ScheduleApiController(private val slots: SlotJpaRepository, private val bookingOptions: ru.cheftable.application.booking.BookingOptionsService) {
     @GetMapping("/slots")
     fun slots(
         @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) dateFrom: OffsetDateTime?,
@@ -25,6 +29,16 @@ class ScheduleApiController(private val slots: SlotJpaRepository) {
 
     @GetMapping("/slots/{slotId}")
     fun slot(@PathVariable slotId: UUID): SlotDto = slots.findWithDetailsById(slotId)?.toDto() ?: throw NoSuchElementException("Slot not found")
+
+    @GetMapping("/slots/{slotId}/booking-options")
+    fun bookingOptions(@PathVariable slotId: UUID, @AuthenticationPrincipal client: AuthenticatedClient): BookingOptionsDto {
+        val options = bookingOptions.options(slotId, client)
+        return BookingOptionsDto(
+            options.rentalItems.map { it.toDto() },
+            options.allergens.map { it.toDto() },
+            options.allergens.filter { options.savedAllergenIds.contains(it.id) }.map { it.toDto() },
+        )
+    }
 }
 
 data class SlotsResponseDto(val items: List<SlotDto>)
@@ -55,3 +69,10 @@ private fun ru.cheftable.persistence.SlotEntity.toDto(): SlotDto = SlotDto(
     status = status.name,
     priceCents = program?.priceCents ?: 0,
 )
+
+
+data class BookingOptionsDto(val rentalItems: List<RentalItemDto>, val allergens: List<AllergenDto>, val savedAllergies: List<AllergenDto>)
+data class RentalItemDto(val id: String, val name: String, val description: String?, val priceCents: Int)
+data class AllergenDto(val id: String, val code: String, val name: String)
+private fun RentalItemEntity.toDto() = RentalItemDto(id.toString(), name, description, priceCents)
+private fun AllergenEntity.toDto() = AllergenDto(id.toString(), code, name)

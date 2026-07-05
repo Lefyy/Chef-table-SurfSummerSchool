@@ -18,17 +18,24 @@
   </form>
 </header>
 <main class="mx-auto max-w-3xl space-y-4 p-6 pt-0">
-  <p class="rounded-2xl bg-white p-4 text-stone-600 shadow-sm ring-1 ring-stone-200">Это защищенная страница для проверки login/logout flow второго спринта. Данные берутся из backend repositories.</p>
+  <form class="rounded-3xl bg-white p-4 shadow-sm ring-1 ring-stone-200" method="get" th:action="@{/schedule}">
+    <div class="grid gap-3 sm:grid-cols-3">
+      <label class="block"><span class="text-sm font-medium">Уровень</span><select class="mt-1 w-full rounded-2xl border border-stone-300 px-3 py-2" name="level"><option value="">Любой</option><option value="BEGINNER" th:selected="${selectedLevel == 'BEGINNER'}">Для начинающих</option><option value="INTERMEDIATE" th:selected="${selectedLevel == 'INTERMEDIATE'}">Средний</option><option value="ADVANCED" th:selected="${selectedLevel == 'ADVANCED'}">Продвинутый</option></select></label>
+      <label class="block"><span class="text-sm font-medium">Мест от</span><input class="mt-1 w-full rounded-2xl border border-stone-300 px-3 py-2" name="seats" type="number" min="1" th:value="${selectedSeats}"></label>
+      <button class="self-end rounded-2xl bg-stone-950 px-4 py-2 font-semibold text-white" type="submit">Фильтровать</button>
+    </div>
+  </form>
   <section class="space-y-3">
     <article class="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-stone-200" th:each="slot : ${slots}">
       <div class="flex items-start justify-between gap-4">
         <div>
-          <h2 class="text-xl font-semibold" th:text="${slot.program.title}">Итальянская паста</h2>
+          <a class="text-xl font-semibold underline-offset-4 hover:underline" th:href="@{/slots/{id}(id=${slot.id})}" th:text="${slot.program.title}">Итальянская паста</a>
           <p class="mt-1 text-sm text-stone-500" th:text="${#temporals.format(slot.startsAt, 'dd.MM HH:mm')} + ' • ' + ${slot.chef.name}">Дата • Шеф</p>
         </div>
         <span class="rounded-full bg-green-50 px-3 py-1 text-sm font-medium text-green-800" th:text="${slot.capacity - slot.bookedSeats} + ' мест'">8 мест</span>
       </div>
       <p class="mt-3 text-stone-600" th:text="${slot.program.description}">Описание программы</p>
+      <a class="mt-4 inline-block rounded-2xl bg-orange-700 px-4 py-2 font-semibold text-white" th:href="@{/slots/{id}(id=${slot.id})}">Подробнее</a>
     </article>
     <p class="rounded-2xl bg-white p-5 text-center text-stone-500 shadow-sm ring-1 ring-stone-200" th:if="${#lists.isEmpty(slots)}">На ближайшие 7 дней занятий нет.</p>
   </section>
