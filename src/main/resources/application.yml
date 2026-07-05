@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: chef-table
+  profiles:
+    default: local
+  datasource:
+    url: jdbc:postgresql://localhost:5432/chef_table
+    username: chef_table
+    password: chef_table
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    locations: classpath:db/migration,classpath:db/local
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
