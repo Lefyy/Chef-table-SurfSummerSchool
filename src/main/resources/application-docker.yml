@@ -1,0 +1,5 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://postgres:5432/chef_table}
+    username: ${SPRING_DATASOURCE_USERNAME:chef_table}
+    password: ${SPRING_DATASOURCE_PASSWORD:chef_table}

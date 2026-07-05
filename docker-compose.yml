@@ -1,0 +1,26 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: chef_table
+      POSTGRES_USER: chef_table
+      POSTGRES_PASSWORD: chef_table
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U chef_table -d chef_table"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+  app:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/chef_table
+      SPRING_DATASOURCE_USERNAME: chef_table
+      SPRING_DATASOURCE_PASSWORD: chef_table
+    ports:
+      - "8080:8080"

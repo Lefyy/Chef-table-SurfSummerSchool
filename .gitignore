@@ -1,0 +1,7 @@
+.gradle/
+build/
+out/
+*.iml
+.env
+node_modules/
+src/main/resources/static/css/app.css
