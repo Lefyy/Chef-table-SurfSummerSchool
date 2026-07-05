@@ -10,6 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.http.HttpStatus
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
@@ -22,7 +23,12 @@ class SecurityConfig {
 
     @Bean
     fun securityFilterChain(http: HttpSecurity, bearerFilter: BearerTokenAuthenticationFilter): SecurityFilterChain = http
-        .csrf { csrf -> csrf.ignoringRequestMatchers("/api/**").csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()) }
+        .csrf { csrf ->
+            csrf.ignoringRequestMatchers(
+                "/api/**",
+                AntPathRequestMatcher("/slots/*/booking", "POST"),
+            ).csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+        }
         .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
         .authorizeHttpRequests {
             it.requestMatchers("/", "/css/**", "/js/**", "/actuator/health", "/error", "/login", "/login/code", "/api/v1/auth/sms/request", "/api/v1/auth/sms/verify").permitAll()
