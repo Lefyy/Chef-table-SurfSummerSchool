@@ -20,7 +20,15 @@ class ProfileService(
     fun savedAllergies(client: AuthenticatedClient): List<AllergenSelection> = bookingLinks.findClientAllergens(client.id)
 
     @Transactional(readOnly = true)
-    fun allergySettings(client: AuthenticatedClient): AllergySettings = AllergySettings(allergens.findAllByOrderByNameAsc(), bookingLinks.findAllergenIdsByClientId(client.id).toSet())
+    fun allergySettings(client: AuthenticatedClient): AllergySettings {
+        val savedAllergenIds = bookingLinks.findAllergenIdsByClientId(client.id).toSet()
+        val allergenEntities = allergens.findAllByOrderByNameAsc()
+        return AllergySettings(
+            allergens = allergenEntities,
+            savedAllergenIds = savedAllergenIds,
+            allergenOptions = allergenEntities.map { AllergenOption(requireNotNull(it.id), it.name, savedAllergenIds.contains(it.id)) },
+        )
+    }
 
     @Transactional
     fun updateAllergies(client: AuthenticatedClient, allergenIds: List<UUID>) {
@@ -104,4 +112,4 @@ data class BookingDetails(val booking: BookingEntity, val rentals: List<RentalSe
 data class RentalSelection(val id: UUID, val name: String, val priceCents: Int, val quantity: Int)
 data class AllergenSelection(val id: UUID, val name: String)
 
-data class AllergySettings(val allergens: List<AllergenEntity>, val savedAllergenIds: Set<UUID>)
+data class AllergySettings(val allergens: List<AllergenEntity>, val savedAllergenIds: Set<UUID>, val allergenOptions: List<AllergenOption>)
