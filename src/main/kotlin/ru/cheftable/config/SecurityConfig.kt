@@ -28,7 +28,10 @@ class SecurityConfig {
         .exceptionHandling { exceptions ->
             exceptions.authenticationEntryPoint { request, response, _ ->
                 val acceptsHtml = request.getHeader("Accept")?.contains("text/html") == true
-                if (acceptsHtml) response.sendRedirect("/login") else response.sendError(HttpStatus.UNAUTHORIZED.value())
+                if (acceptsHtml) {
+                    val target = request.requestURI + (request.queryString?.let { "?$it" } ?: "")
+                    response.sendRedirect("/login?redirect=" + java.net.URLEncoder.encode(target, java.nio.charset.StandardCharsets.UTF_8))
+                } else response.sendError(HttpStatus.UNAUTHORIZED.value())
             }
         }
         .logout { it.disable() }

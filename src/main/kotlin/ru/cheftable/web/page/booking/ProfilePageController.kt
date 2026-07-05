@@ -49,8 +49,15 @@ class ProfilePageController(
 
     @GetMapping("/profile/allergies")
     fun allergies(@AuthenticationPrincipal client: AuthenticatedClient, model: Model): String {
-        model.addAttribute("allergies", profileService.savedAllergies(client))
+        model.addAttribute("settings", profileService.allergySettings(client))
         return "profile/allergies"
+    }
+
+    @PostMapping("/profile/allergies")
+    fun updateAllergies(@AuthenticationPrincipal client: AuthenticatedClient, @RequestParam(required = false) allergenIds: List<UUID>?, redirect: RedirectAttributes): String {
+        profileService.updateAllergies(client, allergenIds.orEmpty())
+        redirect.addFlashAttribute("message", "Аллергии обновлены")
+        return "redirect:/profile/allergies"
     }
 
     @GetMapping("/ratings/{bookingId}")

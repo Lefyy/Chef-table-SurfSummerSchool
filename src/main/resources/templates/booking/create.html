@@ -3,7 +3,7 @@
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Бронирование — Шеф-стол</title><script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script><link rel="stylesheet" th:href="@{/css/app.css}"></head>
 <body class="min-h-screen bg-stone-50 text-stone-950">
 <main class="mx-auto max-w-3xl p-6" x-data="{step:1}">
-  <a class="text-sm font-medium text-stone-600 underline" th:href="@{/slots/{id}(id=${slot.id})}">← Назад к классу</a>
+  <a class="inline-flex rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-medium shadow-sm" th:href="@{/slots/{id}(id=${slot.id})}">← Назад к классу</a>
   <h1 class="mt-4 text-3xl font-bold">Оформление брони</h1>
   <p class="mt-2 text-stone-600" th:text="${slot.program.title} + ' • ' + ${#temporals.format(slot.startsAt, 'dd.MM HH:mm')}">Класс</p>
   <form class="mt-6 space-y-4" method="post" th:action="@{/slots/{id}/booking(id=${slot.id})}">

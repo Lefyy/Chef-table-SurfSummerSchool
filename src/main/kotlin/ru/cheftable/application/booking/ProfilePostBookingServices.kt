@@ -10,6 +10,7 @@ import java.util.UUID
 @Service
 class ProfileService(
     private val clients: ClientJpaRepository,
+    private val allergens: AllergenJpaRepository,
     private val bookingLinks: BookingLinkRepository,
 ) {
     @Transactional(readOnly = true)
@@ -17,6 +18,17 @@ class ProfileService(
 
     @Transactional(readOnly = true)
     fun savedAllergies(client: AuthenticatedClient): List<AllergenSelection> = bookingLinks.findClientAllergens(client.id)
+
+    @Transactional(readOnly = true)
+    fun allergySettings(client: AuthenticatedClient): AllergySettings = AllergySettings(allergens.findAllByOrderByNameAsc(), bookingLinks.findAllergenIdsByClientId(client.id).toSet())
+
+    @Transactional
+    fun updateAllergies(client: AuthenticatedClient, allergenIds: List<UUID>) {
+        val selectedIds = allergenIds.distinct()
+        if (selectedIds.isNotEmpty() && allergens.countByIdIn(selectedIds) != selectedIds.size.toLong()) throw ValidationException("Allergen not found")
+        bookingLinks.removeClientAllergens(client.id)
+        selectedIds.forEach { bookingLinks.addClientAllergen(client.id, it) }
+    }
 }
 
 @Service
@@ -91,3 +103,5 @@ class RatingService(
 data class BookingDetails(val booking: BookingEntity, val rentals: List<RentalSelection>, val allergens: List<AllergenSelection>, val canCancel: Boolean, val canRate: Boolean, val hasRating: Boolean)
 data class RentalSelection(val id: UUID, val name: String, val priceCents: Int, val quantity: Int)
 data class AllergenSelection(val id: UUID, val name: String)
+
+data class AllergySettings(val allergens: List<AllergenEntity>, val savedAllergenIds: Set<UUID>)
