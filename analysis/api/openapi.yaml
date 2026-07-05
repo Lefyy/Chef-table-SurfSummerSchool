@@ -1,0 +1,54 @@
+openapi: 3.1.0
+info:
+  title: Chef Table Client API
+  version: 1.0.0
+  description: |
+    OpenAPI specification for the MVP client web application «Шеф-стол».
+    The API covers only client-facing scenarios confirmed by screens and design documents:
+    SMS authorization, schedule browsing, booking creation/cancellation, profile/history,
+    saved allergies read-only view, chef rating, and logout.
+servers:
+  - url: https://api.example.com/v1
+    description: Production API base URL placeholder
+security:
+  - bearerAuth: []
+tags:
+  - name: Auth
+    description: Phone/SMS authentication and session logout.
+  - name: Schedule
+    description: Schedule, slot details and booking setup dictionaries.
+  - name: Bookings
+    description: Booking creation, history, details and cancellation.
+  - name: Profile
+    description: Client profile and saved allergies.
+  - name: Ratings
+    description: One-time chef rating after an attended completed class.
+paths:
+  /auth/sms/request:
+    $ref: './paths/auth/sms-request.yaml'
+  /auth/sms/verify:
+    $ref: './paths/auth/sms-verify.yaml'
+  /auth/logout:
+    $ref: './paths/auth/logout.yaml'
+  /schedule/slots:
+    $ref: './paths/schedule/slots.yaml'
+  /schedule/slots/{slotId}:
+    $ref: './paths/schedule/slot-by-id.yaml'
+  /schedule/slots/{slotId}/booking-options:
+    $ref: './paths/schedule/slot-booking-options.yaml'
+  /bookings:
+    $ref: './paths/bookings/bookings.yaml'
+  /bookings/{bookingId}:
+    $ref: './paths/bookings/booking-by-id.yaml'
+  /bookings/{bookingId}/cancel:
+    $ref: './paths/bookings/booking-cancel.yaml'
+  /profile:
+    $ref: './paths/profile/profile.yaml'
+  /profile/allergies:
+    $ref: './paths/profile/allergies.yaml'
+  /ratings:
+    $ref: './paths/ratings/ratings.yaml'
+components:
+  securitySchemes:
+    bearerAuth:
+      $ref: './components/security/bearer-auth.yaml'

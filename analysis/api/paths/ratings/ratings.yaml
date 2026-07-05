@@ -1,0 +1,39 @@
+post:
+  tags: [Ratings]
+  summary: Submit chef rating for a booking
+  description: Creates one rating only for a completed attended class. Rating cannot be changed or submitted twice.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required: [bookingId, stars]
+          properties:
+            bookingId: { $ref: '../../components/schemas/common.yaml#/Id' }
+            stars:
+              type: integer
+              minimum: 1
+              maximum: 5
+              example: 5
+            comment:
+              type: string
+              nullable: true
+              example: Спасибо, было вкусно!
+  responses:
+    '201':
+      description: Rating has been saved and chef average rating is recalculated by backend.
+      content:
+        application/json:
+          schema: { $ref: '../../components/schemas/domain.yaml#/Rating' }
+    '400': { $ref: '../../components/responses/common.yaml#/ValidationError' }
+    '401': { $ref: '../../components/responses/common.yaml#/Unauthorized' }
+    '403': { $ref: '../../components/responses/common.yaml#/Forbidden' }
+    '404': { $ref: '../../components/responses/common.yaml#/NotFound' }
+    '409':
+      description: Rating is unavailable because class is not completed, client did not attend, or rating already exists.
+      content:
+        application/json:
+          schema: { $ref: '../../components/schemas/common.yaml#/Error' }
+          example: { code: RATING_NOT_AVAILABLE, message: Оценка недоступна }
+    '500': { $ref: '../../components/responses/common.yaml#/ServerError' }

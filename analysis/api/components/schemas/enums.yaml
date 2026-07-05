@@ -1,0 +1,20 @@
+Level:
+  type: string
+  description: Difficulty level. Exact dictionary values are backend-defined.
+  example: beginner
+BookingStatus:
+  type: string
+  enum: [active, cancelled_by_client, cancelled_by_studio]
+  x-enumDescriptions:
+    active: Активна.
+    cancelled_by_client: Отменена клиентом.
+    cancelled_by_studio: Отменена студией.
+PaymentStatus:
+  type: string
+  enum: [unpaid, paid]
+  x-enumDescriptions:
+    unpaid: Не оплачено.
+    paid: Оплачено.
+SlotStatus:
+  type: string
+  enum: [available, full, cancelled_by_studio]

@@ -1,0 +1,51 @@
+get:
+  tags: [Bookings]
+  summary: Get current client's booking history
+  description: Pagination is not included because source materials do not describe it.
+  responses:
+    '200':
+      description: Booking history, possibly empty.
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [items]
+            properties:
+              items:
+                type: array
+                items: { $ref: '../../components/schemas/domain.yaml#/Booking' }
+    '401': { $ref: '../../components/responses/common.yaml#/Unauthorized' }
+    '500': { $ref: '../../components/responses/common.yaml#/ServerError' }
+post:
+  tags: [Bookings]
+  summary: Create booking
+  description: Creates exactly one seat booking atomically and saves selected allergies to the client profile.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required: [slotId, selectedRentalItemIds, selectedAllergenIds]
+          properties:
+            slotId: { $ref: '../../components/schemas/common.yaml#/Id' }
+            selectedRentalItemIds:
+              type: array
+              items: { $ref: '../../components/schemas/common.yaml#/Id' }
+            selectedAllergenIds:
+              type: array
+              items: { $ref: '../../components/schemas/common.yaml#/Id' }
+        examples:
+          default:
+            $ref: '../../components/examples/booking-create-request.yaml'
+  responses:
+    '201':
+      description: Booking has been created with status active.
+      content:
+        application/json:
+          schema: { $ref: '../../components/schemas/domain.yaml#/Booking' }
+    '400': { $ref: '../../components/responses/common.yaml#/ValidationError' }
+    '401': { $ref: '../../components/responses/common.yaml#/Unauthorized' }
+    '409': { $ref: '../../components/responses/common.yaml#/NoSeats' }
+    '410': { $ref: '../../components/responses/common.yaml#/StudioCancelled' }
+    '500': { $ref: '../../components/responses/common.yaml#/ServerError' }

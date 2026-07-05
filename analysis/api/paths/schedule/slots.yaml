@@ -1,0 +1,28 @@
+get:
+  tags: [Schedule]
+  summary: Get schedule slots
+  description: By default returns the nearest 7 days. Filters are combined with AND logic.
+  parameters:
+    - $ref: '../../components/parameters/common.yaml#/DateFrom'
+    - $ref: '../../components/parameters/common.yaml#/DateTo'
+    - $ref: '../../components/parameters/common.yaml#/ProgramId'
+    - $ref: '../../components/parameters/common.yaml#/ChefId'
+    - $ref: '../../components/parameters/common.yaml#/Level'
+    - $ref: '../../components/parameters/common.yaml#/HasAvailableSeats'
+    - $ref: '../../components/parameters/common.yaml#/RentalAvailable'
+    - $ref: '../../components/parameters/common.yaml#/Sort'
+  responses:
+    '200':
+      description: Schedule slots or an empty array when no classes are available.
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [items]
+            properties:
+              items:
+                type: array
+                items: { $ref: '../../components/schemas/domain.yaml#/Slot' }
+    '401': { $ref: '../../components/responses/common.yaml#/Unauthorized' }
+    '400': { $ref: '../../components/responses/common.yaml#/ValidationError' }
+    '500': { $ref: '../../components/responses/common.yaml#/ServerError' }

@@ -1,0 +1,18 @@
+get:
+  tags: [Profile]
+  summary: Get saved allergies of current client
+  description: Read-only view; profile allergy editing is outside MVP.
+  responses:
+    '200':
+      description: Saved allergies, possibly empty.
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [items]
+            properties:
+              items:
+                type: array
+                items: { $ref: '../../components/schemas/domain.yaml#/Allergen' }
+    '401': { $ref: '../../components/responses/common.yaml#/Unauthorized' }
+    '500': { $ref: '../../components/responses/common.yaml#/ServerError' }

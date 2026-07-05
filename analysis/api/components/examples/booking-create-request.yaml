@@ -1,0 +1,7 @@
+summary: Create booking with one rental item and one allergy
+value:
+  slotId: slot_2026_07_12_1000
+  selectedRentalItemIds:
+    - rental_apron
+  selectedAllergenIds:
+    - allergen_nuts

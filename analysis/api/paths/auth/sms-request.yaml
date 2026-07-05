@@ -1,0 +1,30 @@
+post:
+  tags: [Auth]
+  summary: Request SMS code
+  security: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required: [phone]
+          properties:
+            phone: { $ref: '../../components/schemas/common.yaml#/Phone' }
+        example: { phone: '+79991234567' }
+  responses:
+    '202':
+      description: SMS code has been requested. Resend is allowed no earlier than in 60 seconds.
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [expiresInSeconds, resendAvailableInSeconds, maxVerificationAttempts, maxResendAttempts]
+            properties:
+              expiresInSeconds: { type: integer, example: 300 }
+              resendAvailableInSeconds: { type: integer, example: 60 }
+              maxVerificationAttempts: { type: integer, example: 3 }
+              maxResendAttempts: { type: integer, example: 5 }
+    '400': { $ref: '../../components/responses/common.yaml#/ValidationError' }
+    '429': { $ref: '../../components/responses/common.yaml#/ValidationError' }
+    '500': { $ref: '../../components/responses/common.yaml#/ServerError' }

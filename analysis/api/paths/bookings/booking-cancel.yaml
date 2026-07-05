@@ -1,0 +1,17 @@
+post:
+  tags: [Bookings]
+  summary: Cancel booking by client
+  description: Allowed only for active bookings more than 12 hours before class start. No cancellation reason is sent by the client.
+  parameters:
+    - $ref: '../../components/parameters/common.yaml#/BookingId'
+  responses:
+    '200':
+      description: Booking status changed to cancelled_by_client; seat returned by backend.
+      content:
+        application/json:
+          schema: { $ref: '../../components/schemas/domain.yaml#/Booking' }
+    '401': { $ref: '../../components/responses/common.yaml#/Unauthorized' }
+    '403': { $ref: '../../components/responses/common.yaml#/Forbidden' }
+    '404': { $ref: '../../components/responses/common.yaml#/NotFound' }
+    '409': { $ref: '../../components/responses/common.yaml#/LateCancellation' }
+    '500': { $ref: '../../components/responses/common.yaml#/ServerError' }

@@ -1,0 +1,45 @@
+Unauthorized:
+  description: Authentication is required or the session has expired.
+  content:
+    application/json:
+      schema: { $ref: '../schemas/common.yaml#/Error' }
+      example: { code: UNAUTHORIZED, message: Требуется авторизация }
+Forbidden:
+  description: The current client is not allowed to perform the requested operation.
+  content:
+    application/json:
+      schema: { $ref: '../schemas/common.yaml#/Error' }
+NotFound:
+  description: Resource was not found.
+  content:
+    application/json:
+      schema: { $ref: '../schemas/common.yaml#/Error' }
+ValidationError:
+  description: Request validation failed.
+  content:
+    application/json:
+      schema: { $ref: '../schemas/common.yaml#/Error' }
+ServerError:
+  description: Unspecified backend error shown to the client as «Ошибка сервера».
+  content:
+    application/json:
+      schema: { $ref: '../schemas/common.yaml#/Error' }
+      example: { code: SERVER_ERROR, message: Ошибка сервера }
+NoSeats:
+  description: Booking cannot be completed because no free seats remain.
+  content:
+    application/json:
+      schema: { $ref: '../schemas/common.yaml#/Error' }
+      example: { code: NO_SEATS, message: Нет свободных мест }
+LateCancellation:
+  description: Cancellation is unavailable 12 hours or less before class start.
+  content:
+    application/json:
+      schema: { $ref: '../schemas/common.yaml#/Error' }
+      example: { code: LATE_CANCELLATION, message: Отмена недоступна менее чем за 12 часов до класса }
+StudioCancelled:
+  description: Slot or booking was cancelled by the studio; rebooking is forbidden.
+  content:
+    application/json:
+      schema: { $ref: '../schemas/common.yaml#/Error' }
+      example: { code: SLOT_CANCELLED_BY_STUDIO, message: Класс отменён студией, details: { cancellationReason: Класс отменён студией } }

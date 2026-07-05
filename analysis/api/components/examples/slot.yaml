@@ -1,0 +1,26 @@
+summary: Available cooking class slot
+value:
+  id: slot_2026_07_12_1000
+  startsAt: '2026-07-12T10:00:00Z'
+  endsAt: '2026-07-12T13:00:00Z'
+  programId: program_pasta
+  chefId: chef_anna
+  maxSeats: 12
+  availableSeats: 4
+  address: Москва, ул. Примерная, 1
+  level: beginner
+  needsOven: false
+  status: available
+  cancellationReason: null
+  program:
+    id: program_pasta
+    title: Итальянская паста
+    description: Готовим пасту и соусы под руководством шефа.
+    level: beginner
+    menuItems: [Паста, Соус, Десерт]
+    needsOven: false
+  chef:
+    id: chef_anna
+    name: Анна Иванова
+    avgRating: 4.8
+    specialization: [Итальянская кухня]
