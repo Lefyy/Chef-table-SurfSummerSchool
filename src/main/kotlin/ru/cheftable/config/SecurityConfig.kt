@@ -28,6 +28,7 @@ class SecurityConfig {
                 AntPathRequestMatcher("/api/**"),
                 AntPathRequestMatcher("/slots/*/booking", "POST"),
                 AntPathRequestMatcher("/ratings/*", "POST"),
+                AntPathRequestMatcher("/logout", "POST"),
             )
             csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
         }
