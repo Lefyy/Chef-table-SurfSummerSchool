@@ -9,7 +9,7 @@
     <aside class="space-y-3">
       <a class="block rounded-2xl bg-stone-950 px-4 py-3 text-center font-semibold text-white shadow-sm" href="/profile/bookings">Брони</a>
       <a class="block rounded-2xl border border-stone-300 bg-white px-4 py-3 text-center font-semibold shadow-sm" href="/profile/allergies">Аллергии</a>
-      <form method="post" action="/logout"><button class="w-full rounded-2xl border border-red-200 bg-red-50 px-4 py-3 font-semibold text-red-800 shadow-sm" type="submit">Выйти</button></form>
+      <form method="post" action="/logout"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"><button class="w-full rounded-2xl border border-red-200 bg-red-50 px-4 py-3 font-semibold text-red-800 shadow-sm" type="submit">Выйти</button></form>
     </aside>
     <section>
       <div class="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-stone-200"><p class="text-stone-500">Телефон</p><p class="text-xl font-semibold" th:text="${clientProfile.phone}">+7999</p></div>

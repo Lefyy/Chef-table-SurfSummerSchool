@@ -14,7 +14,7 @@
     <h1 class="mt-2 text-3xl font-bold">Введите код</h1>
     <p class="mt-3 text-stone-600">Код отправлен на <span class="font-semibold" th:text="${phone}">+79991234567</span>. В dev-режиме используйте код 1234.</p>
 
-    <form class="mt-6 space-y-4" th:action="@{/login/code}" th:object="${form}" method="post">
+    <form class="mt-6 space-y-4" th:action="@{/login/code}" th:object="${form}" method="post"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
       <input type="hidden" th:field="*{phone}">
       <input type="hidden" th:field="*{redirect}">
       <label class="block">

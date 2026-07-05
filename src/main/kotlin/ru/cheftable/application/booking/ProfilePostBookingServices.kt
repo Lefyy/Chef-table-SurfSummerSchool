@@ -1,5 +1,6 @@
 package ru.cheftable.application.booking
 
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ru.cheftable.application.auth.AuthenticatedClient
@@ -73,6 +74,8 @@ class BookingQueryService(
 
 @Service
 class BookingCancellationService(private val bookings: BookingJpaRepository) {
+    private val log = LoggerFactory.getLogger(javaClass)
+
     @Transactional
     fun cancel(client: AuthenticatedClient, bookingId: UUID): BookingEntity {
         val booking = bookings.findWithDetailsById(bookingId) ?: throw NotFoundException("Booking not found")
@@ -83,6 +86,7 @@ class BookingCancellationService(private val bookings: BookingJpaRepository) {
         booking.status = BookingStatusEntity.CANCELLED_BY_CLIENT
         booking.cancelledAt = OffsetDateTime.now()
         booking.slot?.bookedSeats = (booking.slot?.bookedSeats ?: 1) - 1
+        log.info("booking_cancelled event_type=booking_cancelled booking_id={} client_id={}", booking.id, client.id)
         return booking
     }
 }
@@ -93,6 +97,8 @@ class RatingService(
     private val ratings: RatingJpaRepository,
     private val bookingLinks: BookingLinkRepository,
 ) {
+    private val log = LoggerFactory.getLogger(javaClass)
+
     @Transactional
     fun rate(client: AuthenticatedClient, bookingId: UUID, stars: Int, comment: String?): RatingEntity {
         if (stars !in 1..5) throw ValidationException("Stars must be between 1 and 5")
@@ -104,6 +110,7 @@ class RatingService(
         val chef = booking.slot?.chef ?: throw ValidationException("Chef not found")
         val rating = ratings.save(RatingEntity(UUID.randomUUID(), booking, chef, booking.client, stars, comment?.trim()?.take(1000), OffsetDateTime.now()))
         bookingLinks.updateChefAverageRating(requireNotNull(chef.id))
+        log.info("rating_submitted event_type=rating_submitted booking_id={} chef_id={} client_id={}", booking.id, chef.id, client.id)
         return rating
     }
 }

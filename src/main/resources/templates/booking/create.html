@@ -6,7 +6,7 @@
   <a class="inline-flex rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-medium shadow-sm" th:href="@{/slots/{id}(id=${slot.id})}">← Назад к классу</a>
   <h1 class="mt-4 text-3xl font-bold">Оформление брони</h1>
   <p class="mt-2 text-stone-600" th:text="${slot.program.title} + ' • ' + ${#temporals.format(slot.startsAt, 'dd.MM HH:mm')}">Класс</p>
-  <form class="mt-6 space-y-4" method="post" th:action="@{/slots/{id}/booking(id=${slot.id})}">
+  <form class="mt-6 space-y-4" method="post" th:action="@{/slots/{id}/booking(id=${slot.id})}"><input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
     <section class="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-stone-200" x-show="step === 1">
       <h2 class="text-xl font-semibold">1. Прокат</h2>
       <label class="mt-3 flex gap-3 rounded-2xl border border-stone-200 p-3" th:each="item : ${options.rentalItems}">
