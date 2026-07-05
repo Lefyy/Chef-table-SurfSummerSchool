@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title th:text="${slot.program.title} + ' — Шеф-стол'">Класс</title><link rel="stylesheet" th:href="@{/css/app.css}"></head>
+<body class="min-h-screen bg-stone-50 text-stone-950">
+<main class="mx-auto max-w-3xl p-6">
+  <a class="text-sm font-medium text-stone-600 underline" th:href="@{/schedule}">← К расписанию</a>
+  <article class="mt-4 rounded-3xl bg-white p-6 shadow-sm ring-1 ring-stone-200">
+    <p class="text-sm font-medium text-orange-700" th:text="${slot.program.difficulty}">BEGINNER</p>
+    <h1 class="mt-2 text-3xl font-bold" th:text="${slot.program.title}">Название</h1>
+    <p class="mt-3 text-stone-600" th:text="${slot.program.description}">Описание</p>
+    <dl class="mt-6 grid gap-3 sm:grid-cols-2">
+      <div class="rounded-2xl bg-stone-50 p-4"><dt class="text-sm text-stone-500">Дата и время</dt><dd class="font-semibold" th:text="${#temporals.format(slot.startsAt, 'dd.MM.yyyy HH:mm')} + '–' + ${#temporals.format(slot.endsAt, 'HH:mm')}">дата</dd></div>
+      <div class="rounded-2xl bg-stone-50 p-4"><dt class="text-sm text-stone-500">Шеф</dt><dd class="font-semibold" th:text="${slot.chef.name}">Шеф</dd></div>
+      <div class="rounded-2xl bg-stone-50 p-4"><dt class="text-sm text-stone-500">Стоимость</dt><dd class="font-semibold" th:text="${#numbers.formatDecimal(slot.program.priceCents / 100.0, 0, 'WHITESPACE', 0, 'COMMA')} + ' ₽'">0 ₽</dd></div>
+      <div class="rounded-2xl bg-stone-50 p-4"><dt class="text-sm text-stone-500">Свободно</dt><dd class="font-semibold" th:text="${slot.capacity - slot.bookedSeats} + ' из ' + ${slot.capacity}">места</dd></div>
+    </dl>
+    <a class="mt-6 block rounded-2xl bg-stone-950 px-4 py-3 text-center font-semibold text-white" th:if="${slot.status.name() == 'SCHEDULED' and slot.capacity > slot.bookedSeats}" th:href="@{/slots/{id}/booking(id=${slot.id})}">Забронировать место</a>
+    <p class="mt-6 rounded-2xl bg-red-50 p-4 text-red-800" th:unless="${slot.status.name() == 'SCHEDULED' and slot.capacity > slot.bookedSeats}">Бронирование недоступно.</p>
+  </article>
+</main>
+</body>
+</html>
