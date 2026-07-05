@@ -25,9 +25,10 @@ class SecurityConfig {
     fun securityFilterChain(http: HttpSecurity, bearerFilter: BearerTokenAuthenticationFilter): SecurityFilterChain = http
         .csrf { csrf ->
             csrf.ignoringRequestMatchers(
-                "/api/**",
+                AntPathRequestMatcher("/api/**"),
                 AntPathRequestMatcher("/slots/*/booking", "POST"),
-            ).csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+            )
+            csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
         }
         .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
         .authorizeHttpRequests {
