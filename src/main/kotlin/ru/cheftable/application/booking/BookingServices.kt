@@ -45,7 +45,7 @@ class BookingCreationService(
 
         slot.bookedSeats += 1
         val total = (slot.program?.priceCents ?: 0) + rentalItems.sumOf { it.priceCents }
-        val booking = bookings.save(BookingEntity(UUID.randomUUID(), clients.getReferenceById(client.id), slot, BookingStatusEntity.ACTIVE, PaymentStatusEntity.NOT_REQUIRED, total, false, OffsetDateTime.now(), null))
+        val booking = bookings.saveAndFlush(BookingEntity(UUID.randomUUID(), clients.getReferenceById(client.id), slot, BookingStatusEntity.ACTIVE, PaymentStatusEntity.NOT_REQUIRED, total, false, OffsetDateTime.now(), null))
         rentalItems.forEach { bookingLinks.addRental(requireNotNull(booking.id), requireNotNull(it.id), 1) }
         selectedAllergenIds.forEach {
             bookingLinks.addBookingAllergen(requireNotNull(booking.id), it)
