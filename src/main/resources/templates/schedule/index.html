@@ -13,7 +13,7 @@
     <h1 class="text-3xl font-bold">Расписание</h1>
     <p class="text-sm text-stone-500" th:text="'Вы вошли как ' + ${phone}">Вы вошли</p>
   </div>
-  <div class="flex gap-2"><a class="rounded-full border border-stone-300 px-4 py-2 text-sm font-medium" th:href="@{/profile}">Профиль</a><form th:action="@{/logout}" method="post"><button class="rounded-full border border-stone-300 px-4 py-2 text-sm font-medium" type="submit">Выйти</button></form></div>
+  <a class="rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-medium shadow-sm" th:href="@{/profile}">Профиль</a>
 </header>
 <main class="mx-auto max-w-3xl space-y-4 p-6 pt-0">
   <form class="rounded-3xl bg-white p-4 shadow-sm ring-1 ring-stone-200" method="get" th:action="@{/schedule}">

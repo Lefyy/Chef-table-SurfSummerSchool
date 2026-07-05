@@ -12,6 +12,7 @@ class BookingLinkRepository(private val jdbc: JdbcTemplate) {
     fun addRental(bookingId: UUID, rentalItemId: UUID, quantity: Int) = jdbc.update("insert into booking_rental_items (booking_id, rental_item_id, quantity) values (?, ?, ?) on conflict do nothing", bookingId, rentalItemId, quantity)
     fun addBookingAllergen(bookingId: UUID, allergenId: UUID) = jdbc.update("insert into booking_allergens (booking_id, allergen_id) values (?, ?) on conflict do nothing", bookingId, allergenId)
     fun addClientAllergen(clientId: UUID, allergenId: UUID) = jdbc.update("insert into client_allergens (client_id, allergen_id) values (?, ?) on conflict do nothing", clientId, allergenId)
+    fun removeClientAllergens(clientId: UUID) = jdbc.update("delete from client_allergens where client_id = ?", clientId)
 
     fun findClientAllergens(clientId: UUID): List<AllergenSelection> = jdbc.query("""
         select a.id, a.name from client_allergens ca join allergens a on a.id = ca.allergen_id

@@ -16,6 +16,7 @@
 
     <form class="mt-6 space-y-4" th:action="@{/login/code}" th:object="${form}" method="post">
       <input type="hidden" th:field="*{phone}">
+      <input type="hidden" th:field="*{redirect}">
       <label class="block">
         <span class="text-sm font-medium">SMS-код</span>
         <input class="mt-2 w-full rounded-2xl border border-stone-300 px-4 py-3 text-center text-2xl tracking-[0.5em]" th:field="*{code}" placeholder="1234" autocomplete="one-time-code" inputmode="numeric" maxlength="4">

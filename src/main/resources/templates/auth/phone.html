@@ -16,6 +16,7 @@
     <div th:if="${param.logout}" class="mt-4 rounded-2xl bg-green-50 p-3 text-sm text-green-800">Вы вышли из аккаунта.</div>
 
     <form class="mt-6 space-y-4" th:action="@{/login}" th:object="${form}" method="post">
+      <input type="hidden" th:field="*{redirect}">
       <label class="block">
         <span class="text-sm font-medium">Телефон</span>
         <input class="mt-2 w-full rounded-2xl border border-stone-300 px-4 py-3 text-lg" th:field="*{phone}" placeholder="+79991234567" autocomplete="tel" inputmode="tel">
