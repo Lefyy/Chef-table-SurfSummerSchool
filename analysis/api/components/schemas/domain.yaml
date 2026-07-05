@@ -1,0 +1,154 @@
+Allergen:
+  type: object
+  required: [id, name]
+  properties:
+    id:
+      $ref: './common.yaml#/Id'
+    name:
+      type: string
+      example: Орехи
+RentalItem:
+  type: object
+  required: [id, name, price, stockTotal, stockAvailable]
+  properties:
+    id:
+      $ref: './common.yaml#/Id'
+    name:
+      type: string
+      example: Фартук
+    price:
+      $ref: './common.yaml#/Money'
+    stockTotal:
+      type: integer
+      minimum: 0
+      example: 12
+    stockAvailable:
+      type: integer
+      minimum: 0
+      example: 3
+Program:
+  type: object
+  required: [id, title, description, level, menuItems, needsOven]
+  properties:
+    id:
+      $ref: './common.yaml#/Id'
+    title:
+      type: string
+      example: Итальянская паста
+    description:
+      type: string
+      example: Готовим пасту и соусы под руководством шефа.
+    level:
+      $ref: './enums.yaml#/Level'
+    menuItems:
+      type: array
+      items: { type: string }
+      example: [Паста, Соус, Десерт]
+    needsOven:
+      type: boolean
+      example: false
+Chef:
+  type: object
+  required: [id, name, avgRating, specialization]
+  properties:
+    id:
+      $ref: './common.yaml#/Id'
+    name:
+      type: string
+      example: Анна Иванова
+    avgRating:
+      type: number
+      format: double
+      minimum: 0
+      maximum: 5
+      example: 4.8
+    specialization:
+      type: array
+      items: { type: string }
+      example: [Итальянская кухня]
+Slot:
+  type: object
+  required: [id, startsAt, endsAt, programId, chefId, maxSeats, availableSeats, address, level, needsOven, status, program, chef]
+  properties:
+    id: { $ref: './common.yaml#/Id' }
+    startsAt: { $ref: './common.yaml#/DateTime' }
+    endsAt: { $ref: './common.yaml#/DateTime' }
+    programId: { $ref: './common.yaml#/Id' }
+    chefId: { $ref: './common.yaml#/Id' }
+    maxSeats: { type: integer, enum: [8, 12], example: 12 }
+    availableSeats: { type: integer, minimum: 0, example: 4 }
+    address: { type: string, example: Москва, ул. Примерная, 1 }
+    level: { $ref: './enums.yaml#/Level' }
+    needsOven: { type: boolean, example: false }
+    status: { $ref: './enums.yaml#/SlotStatus' }
+    cancellationReason:
+      type: string
+      nullable: true
+      example: Класс отменён студией
+    program: { $ref: '#/Program' }
+    chef: { $ref: '#/Chef' }
+Booking:
+  type: object
+  required: [id, slotId, clientId, status, createdAt, equipmentRental, allergies, paymentStatus, seatCount, attended, rated, slot]
+  properties:
+    id: { $ref: './common.yaml#/Id' }
+    slotId: { $ref: './common.yaml#/Id' }
+    clientId: { $ref: './common.yaml#/Id' }
+    status: { $ref: './enums.yaml#/BookingStatus' }
+    createdAt: { $ref: './common.yaml#/DateTime' }
+    equipmentRental:
+      type: array
+      items: { $ref: '#/RentalItem' }
+    allergies:
+      type: array
+      items: { $ref: '#/Allergen' }
+    paymentStatus: { $ref: './enums.yaml#/PaymentStatus' }
+    cancellationReason:
+      type: string
+      nullable: true
+      example: Класс отменён студией
+    seatCount:
+      type: integer
+      const: 1
+    attended:
+      type: boolean
+      description: Whether the client attended; used to determine rating availability.
+      example: true
+    rated:
+      type: boolean
+      description: Whether rating has already been submitted for this booking.
+      example: false
+    canCancel:
+      type: boolean
+      description: True only for active bookings more than 12 hours before class start.
+      example: true
+    canRate:
+      type: boolean
+      description: True only after completed attended class when no rating exists.
+      example: false
+    slot: { $ref: '#/Slot' }
+ClientProfile:
+  type: object
+  required: [clientId, phone, savedAllergies]
+  properties:
+    clientId: { $ref: './common.yaml#/Id' }
+    phone: { $ref: './common.yaml#/Phone' }
+    savedAllergies:
+      type: array
+      items: { $ref: '#/Allergen' }
+Rating:
+  type: object
+  required: [bookingId, chefId, stars, createdAt]
+  properties:
+    bookingId: { $ref: './common.yaml#/Id' }
+    chefId: { $ref: './common.yaml#/Id' }
+    stars:
+      type: integer
+      minimum: 1
+      maximum: 5
+      example: 5
+    comment:
+      type: string
+      nullable: true
+      example: Отличный класс
+    createdAt: { $ref: './common.yaml#/DateTime' }

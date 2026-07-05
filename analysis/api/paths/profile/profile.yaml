@@ -1,0 +1,11 @@
+get:
+  tags: [Profile]
+  summary: Get current client profile
+  responses:
+    '200':
+      description: Client phone and saved allergies. Booking history is available through /bookings.
+      content:
+        application/json:
+          schema: { $ref: '../../components/schemas/domain.yaml#/ClientProfile' }
+    '401': { $ref: '../../components/responses/common.yaml#/Unauthorized' }
+    '500': { $ref: '../../components/responses/common.yaml#/ServerError' }

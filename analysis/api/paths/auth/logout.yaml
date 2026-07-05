@@ -1,0 +1,7 @@
+post:
+  tags: [Auth]
+  summary: Logout current client session
+  responses:
+    '204': { description: Session token has been revoked or accepted for local removal. }
+    '401': { $ref: '../../components/responses/common.yaml#/Unauthorized' }
+    '500': { $ref: '../../components/responses/common.yaml#/ServerError' }

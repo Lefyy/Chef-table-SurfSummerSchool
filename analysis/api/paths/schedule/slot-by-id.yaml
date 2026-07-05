@@ -1,0 +1,14 @@
+get:
+  tags: [Schedule]
+  summary: Get slot details
+  parameters:
+    - $ref: '../../components/parameters/common.yaml#/SlotId'
+  responses:
+    '200':
+      description: Slot details including program, chef, seats, level, address and cancellation state.
+      content:
+        application/json:
+          schema: { $ref: '../../components/schemas/domain.yaml#/Slot' }
+    '401': { $ref: '../../components/responses/common.yaml#/Unauthorized' }
+    '404': { $ref: '../../components/responses/common.yaml#/NotFound' }
+    '500': { $ref: '../../components/responses/common.yaml#/ServerError' }

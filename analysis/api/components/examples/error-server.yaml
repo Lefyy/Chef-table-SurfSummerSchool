@@ -1,0 +1,4 @@
+summary: Unspecified backend error
+value:
+  code: SERVER_ERROR
+  message: Ошибка сервера

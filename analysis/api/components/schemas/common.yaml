@@ -1,0 +1,40 @@
+Id:
+  type: string
+  minLength: 1
+  example: slot_2026_07_12_1000
+Phone:
+  type: string
+  description: Client phone number. Exact format is not specified by source materials.
+  minLength: 1
+  example: '+79991234567'
+DateTime:
+  type: string
+  format: date-time
+  example: '2026-07-12T10:00:00Z'
+Money:
+  type: object
+  required: [amount, currency]
+  properties:
+    amount:
+      type: number
+      format: double
+      minimum: 0
+      example: 500
+    currency:
+      type: string
+      minLength: 3
+      maxLength: 3
+      example: RUB
+Error:
+  type: object
+  required: [code, message]
+  properties:
+    code:
+      type: string
+      example: SERVER_ERROR
+    message:
+      type: string
+      example: Ошибка сервера
+    details:
+      type: object
+      additionalProperties: true

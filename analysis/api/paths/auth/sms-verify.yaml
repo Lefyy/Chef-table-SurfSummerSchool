@@ -1,0 +1,33 @@
+post:
+  tags: [Auth]
+  summary: Verify SMS code and create session
+  security: []
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required: [phone, code]
+          properties:
+            phone: { $ref: '../../components/schemas/common.yaml#/Phone' }
+            code:
+              type: string
+              pattern: '^\\d{4}$'
+              example: '1234'
+  responses:
+    '200':
+      description: SMS code is valid; session token is issued.
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [accessToken, tokenType, profile]
+            properties:
+              accessToken: { type: string, example: eyJhbGciOi... }
+              tokenType: { type: string, enum: [Bearer], example: Bearer }
+              profile: { $ref: '../../components/schemas/domain.yaml#/ClientProfile' }
+    '400': { $ref: '../../components/responses/common.yaml#/ValidationError' }
+    '401': { $ref: '../../components/responses/common.yaml#/Unauthorized' }
+    '429': { $ref: '../../components/responses/common.yaml#/ValidationError' }
+    '500': { $ref: '../../components/responses/common.yaml#/ServerError' }

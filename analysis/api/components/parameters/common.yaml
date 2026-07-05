@@ -1,0 +1,43 @@
+SlotId:
+  name: slotId
+  in: path
+  required: true
+  schema: { $ref: '../schemas/common.yaml#/Id' }
+BookingId:
+  name: bookingId
+  in: path
+  required: true
+  schema: { $ref: '../schemas/common.yaml#/Id' }
+DateFrom:
+  name: dateFrom
+  in: query
+  schema: { type: string, format: date }
+DateTo:
+  name: dateTo
+  in: query
+  schema: { type: string, format: date }
+ProgramId:
+  name: programId
+  in: query
+  schema: { $ref: '../schemas/common.yaml#/Id' }
+ChefId:
+  name: chefId
+  in: query
+  schema: { $ref: '../schemas/common.yaml#/Id' }
+Level:
+  name: level
+  in: query
+  schema: { $ref: '../schemas/enums.yaml#/Level' }
+HasAvailableSeats:
+  name: hasAvailableSeats
+  in: query
+  schema: { type: boolean }
+RentalAvailable:
+  name: rentalAvailable
+  in: query
+  schema: { type: boolean }
+Sort:
+  name: sort
+  in: query
+  description: Sorting is limited to schedule start time because other sort modes are not described.
+  schema: { type: string, enum: [startsAt], default: startsAt }
